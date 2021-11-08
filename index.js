@@ -1,5 +1,4 @@
 const {
-  contactsPath,
   listContacts,
   getContactById,
   removeContact,
@@ -19,26 +18,29 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-function invokeAction({ action, id, name, email, phone }) {
-  switch (action) {
-    case 'list':
-      break;
+async function invokeAction({ action, id, name, email, phone }) {
+  try {
+    switch (action) {
+      case 'list':
+        return await listContacts();
 
-    case 'get':
-      getContactById(id);
-      break;
+      case 'get':
+        return await getContactById(id);
 
-    case 'add':
-      addContact(id, name, email, phone);
-      break;
+      case 'add':
+        return await addContact(name, email, phone);
 
-    case 'remove':
-      removeContact(id);
-      break;
+      case 'remove':
+        return await removeContact(id);
 
-    default:
-      console.warn('\x1B[31m Unknown action type!');
+      default:
+        console.warn('\x1B[31m Unknown action type!');
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
-invokeAction(argv);
+invokeAction(argv)
+  .then(data => console.table(data))
+  .catch(error => console.log(error));
