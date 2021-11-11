@@ -3,7 +3,7 @@ const {
   getContactById,
   removeContact,
   addContact,
-} = require('./contacts');
+} = require('./controller/contacts');
 
 const { Command } = require('commander');
 const program = new Command();
@@ -41,6 +41,8 @@ async function invokeAction({ action, id, name, email, phone }) {
   }
 }
 
-invokeAction(argv)
-  .then(data => console.table(data))
-  .catch(error => console.log(error));
+(async () => {
+  await invokeAction(argv)
+    .then(data => console.table(data))
+    .catch(error => console.log(error));
+})();
